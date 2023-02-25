@@ -16,6 +16,23 @@ class HabitTitle extends StatelessWidget {
       required this.timeSpent,
       required this.timeGoal,
       required this.isStarted});
+  
+  String converToMinSec(int seconds){
+    String sec = (seconds % 60).toString(); 
+    String mins = (seconds / 60).toStringAsFixed(1); 
+    if(sec.length == 1){
+      sec = '0' + sec; 
+    }
+    if(mins[1] == '.'){
+      mins.substring(0,1); 
+    }
+    return mins[0] + ':'+ sec; 
+  }
+
+  // calculate the progress persentage  
+  double percenCompleted(){
+    return timeSpent/ (timeGoal ); 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +69,8 @@ class HabitTitle extends StatelessWidget {
                           bottom: 0,
                           child: CircularPercentIndicator(
                             radius: fullHeight * .04,
+                            percent: percenCompleted() <1 ? percenCompleted(): 1,
+                            progressColor: percenCompleted()>0.5?(percenCompleted()>0.75 ? Colors.greenAccent : Colors.orangeAccent) : Colors.redAccent, 
                           ),
                         ),
                         Center(child: Icon(isStarted? Icons.pause:Icons.play_arrow), ),
@@ -72,7 +91,7 @@ class HabitTitle extends StatelessWidget {
                       ),
                     ),
                     Text(
-                    " ${timeSpent.toString()}/${timeGoal.toString()}",
+                    " ${converToMinSec(timeSpent)}/${timeGoal.toString()} = ${(percenCompleted()*100).toStringAsFixed(0)}%",
                       style:const TextStyle(
                         fontSize: 20,
                         color:Colors.grey, 
